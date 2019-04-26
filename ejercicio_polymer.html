@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Tianguis</title>
+    <base href="https://cdn.rawgit.com/download/polymer-cdn/2.6.0/lib/">
+    <script src="webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="iron-ajax/iron-ajax.html">
+    <link rel="import" href="polymer/polymer-element.html">
+</head>
+<body>
+    <h2>Tianguis</h2>
+    <polymer-catalogo></polymer-catalogo>
+
+
+    <dom-module id="polymer-catalogo">
+        <template>
+            <style>
+                :host{
+                    display:block;
+                    
+                }
+                *{
+                    font-size: 20px;
+                }
+                table, tr, td{
+                    border: solid 1px;
+                }
+                .products>tr>td {
+                    text-align: center;
+
+                }
+            </style>
+            <table>
+                <tr>
+                    <td>
+                        <a on-click="add">
+                            <img alt="Manzana" src="http://www.dole.cl/dole/site/artic/20150722/imag/foto_0000000520150722172749.png">
+                        </a>
+                    </td>
+                    <td>
+                        <a on-click="add">
+                            <img alt="Pera" src="http://www.dole.cl/dole/site/artic/20150729/imag/foto_0000002420150729173832.png">
+                        </a>
+                    </td>
+                <!-- </tr>
+                <tr> -->
+                    <td>
+                        <a on-click="add">
+                            <img alt="Uva" src="http://www.dole.cl/dole/site/artic/20150729/imag/foto_0000001120150729174225.png">
+                        </a>
+                    </td>
+                    <td>
+                        <a on-click="add">
+                            <img alt="Kiwi" src="http://www.dole.cl/dole/site/artic/20150729/imag/foto_0000002920150729173616.png">
+                        </a>
+                    </td>
+                </tr>
+            </table>
+            <br><br>
+
+                <polymer-carrito producto="{{producto}}"></polymer-carrito>
+        </template>
+        <script>
+            class PolymerCatalogo extends Polymer.Element{
+                static get is() { return "polymer-catalogo"; }
+                static get properties(){
+                    return {
+                        productos: {
+                            type: Array,
+                            value: []
+                        },
+                        producto:{
+                            type: String
+                        }
+                    };
+                }
+                add(model){
+                    //let nombre = model.target.alt;
+                    this.producto = model.target.alt;
+                    
+                    //console.log(model.target.alt);
+                    //this.push('productos', {nombre: nombre})
+                }
+            }
+
+            
+            customElements.define(PolymerCatalogo.is, PolymerCatalogo);
+        </script>
+    </dom-module>
+    
+    <dom-module id="polymer-carrito">
+            <template>
+                <style>
+                    :host{
+                        display:block;
+                        
+                    }
+                    *{
+                        font-size: 20px;
+                    }
+                    table, tr, td{
+                        border: solid 1px;
+                        width: 100%;
+                        border-collapse: collapse;
+                        text-align: center;
+                    }
+                    .container {
+                        position: static;
+                        margin-left: auto;
+                        margin-right: auto;
+                        padding-left: 15em;
+                        padding-right: 15em;
+                    }
+
+                    .wrapper {
+                        position: static;
+                        box-shadow: 0 0 20px 0 rgba(9, 74, 6, 0.66);
+                        border-radius: 5px;
+                    }
+                    .title{
+                        background-color: darkgray;
+                    }
+                    
+                </style>
+                <div class="container">
+                    <div class="wrapper">
+                        <table>
+                            <tr class="title">
+                                <td colspan="2">
+                                    Carrito
+                                </td>
+                            </tr>
+        
+                            <template is="dom-repeat" items="[[productos]]">
+                                <tr>
+                                    <td>[[item.nombre]]</td>
+                                    <!-- <td>[[item.cantidad]]</td> -->
+                                </tr>
+                            </template>
+                            
+                        </table>
+                    </div>
+                </div>
+            </template>
+            <script>
+                class PolymerCarrito extends Polymer.Element{
+                    static get is() { return "polymer-carrito"; }
+                    static get properties(){
+                        return {
+                            productos: {
+                                type: Array,
+                                value: []
+                            },
+                            producto: {
+                                type:String,
+                                observer: 'agregar',
+                                notify: true
+                            }
+                        };
+                    }
+                    agregar(){
+                        if(this.producto == ""){
+
+                        }else{
+                            this.push('productos', {nombre: this.producto})
+                            
+                            this.producto = "";
+                        }
+                    }
+                }
+    
+                
+                customElements.define(PolymerCarrito.is, PolymerCarrito);
+            </script>
+        </dom-module>
+
+
+</body>
+</html>

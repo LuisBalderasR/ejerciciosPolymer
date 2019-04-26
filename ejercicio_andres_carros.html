@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Carros</title>
+    <base href="https://cdn.rawgit.com/download/polymer-cdn/2.6.0/lib/">
+    <script src="webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="iron-ajax/iron-ajax.html">
+    <link rel="import" href="polymer/polymer-element.html">
+</head>
+<body>
+<elemento-uno></elemento-uno>
+
+
+    <dom-module id="elemento-uno">
+        <template>
+            <style>
+                :host{
+                    display: block;
+                    background-color: cyan;
+                    padding: 20px;
+                }
+                *{
+                    font-size: 15px;
+                }
+                .si{
+                    background-color: green;
+                    color: white;
+                }
+                .no{
+                    background-color: red;
+                    color: white;
+                }
+            </style>
+            <div class$="[[existe]]">
+                <h2>[[nombre]]  [[modelo]]</h2>
+            </div>
+            <p>
+                Nombre: <input type="text" value="{{nombre::input}}">
+            </p>
+            <elemento-dos nombre="[[nombre]]" modelo="{{modelo}}" existe="{{existe}}"></elemento-dos>
+        </template>
+        <script>
+            class ElementoUno extends Polymer.Element {
+                static get is() { return "elemento-uno"; }
+                static get properties(){
+                    return {
+                        nombre: {
+                            type: String
+                        },
+                        existe: {
+                            type: String
+                        },
+                        modelo: {
+                            type: String
+                        }
+                    };
+                }
+            }
+            customElements.define(ElementoUno.is, ElementoUno);
+        </script>
+    </dom-module>
+    
+    <dom-module id="elemento-dos">
+        <template>
+            <style>
+                :host{
+                    display: block;
+                    background-color:#b5f056;
+                    padding: 20px;
+                }
+                *{
+                    font-size: 15px;
+                }
+            </style>
+            <h1>Nombre: [[nombre]]</h1>
+            <p>
+                Modelo: <input type="text" value="{{modelo::input}}">
+            </p>
+            <template is="dom-if" if="[[sihay]]">
+                <h1>Marca: [[marca]]</h1>
+            </template>
+        </template>
+        <script>
+                class ElementoDos extends Polymer.Element {
+                    static get is() { return "elemento-dos"; }
+                    static get properties(){
+                        return {
+                            nombre: {
+                                type: String,
+                                observer: 'buscar'
+                            },
+                            existe: {
+                                type: String,
+                                notify: true
+                            },
+                            modelo: {
+                                type: String,
+                                notify: true
+                            },
+                            marcas:{
+                                type: Array,
+                                value: [
+                                    {nom: 'Vento', marc: 'vW'},
+                                    {nom: 'Accent', marc: 'Hyundai'}
+                                ]
+                            },
+                            sihay:{
+                                type: Boolean,
+                                value: false
+                            },
+                            marca:{
+                                type: String
+                            }
+                        };
+                    }
+                    buscar(){
+                        let valor ;
+                        valor = this.marcas.findIndex( (e) => {
+                            return e.nom == this.nombre;
+                        });
+                        console.log(valor);
+                        if(valor >= 0){
+                            this.existe = 'si';
+                            this.sihay = true;
+                            console.log(this.marcas[valor].marc)
+                            this.marca = this.marcas[valor].marc;
+                        }else{
+                            this.existe = 'no';
+                            this.sihay = false;
+                            this.marca = '';
+                        }
+                    }
+                }
+                customElements.define(ElementoDos.is, ElementoDos);
+            </script>
+    </dom-module>
+</body>
+</html>

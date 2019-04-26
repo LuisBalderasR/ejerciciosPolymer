@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <base href="https://cdn.rawgit.com/download/polymer-cdn/2.6.0/lib/">
+    <script src="webcomponentsjs/webcomponents-loader.js"></script>
+    <link rel="import" href="iron-ajax/iron-ajax.html">
+    <link rel="import" href="polymer/polymer-element.html">
+</head>
+<body>
+    <elemento-array></elemento-array>
+    <dom-module id="elemento-array">
+        <template>
+            <style>
+                :host{
+                    display:block;
+                    background-color:lightseagreen;
+                    padding: 5px;
+                }
+                .valorA{
+                    width: 30px;
+                    height: 20px;
+                    text-align: center;
+                    background-color: blue;
+                    color: white;
+                    border: solid 2px;
+                    margin: 3px;
+                }
+                .valorA:hover{
+                    background-color: green
+                }
+
+            </style>
+            <h1>Array Circular</h1>
+            <hr>
+            <p>
+                Size: <input type="number" value="{{size::input}}"> 
+                Rotaciones: <input type="number" value="{{rot::input}}">
+            </p>
+            <hr>
+            <h2>Array</h2>
+            <template is="dom-repeat" items="[[arr]]">
+                <div class="valorA">
+                    [[item]]
+                </div>
+            </template>
+            <h2>Arr Rotado</h2>
+            <template is="dom-repeat" items=[[arr2]]>
+                <div class="valorA" on-mouseout='quitar'>
+                    [[item]]
+                </div>
+            </template>
+        </template>
+        <script>
+            class ElementoArray extends Polymer.Element {
+                static get is() { return "elemento-array"; }
+                static get properties(){
+                    return {
+                        size: {
+                            type: Number,
+                            observer: 'llenar'
+                        },
+                        rot: {
+                            type: Number,
+                            observer: 'rotar'
+                        },
+                        arr: {
+                            type: Array,
+                            value: []
+                        },
+                        arr2: {
+                            type: Array,
+                            value: []
+                        }
+                    };
+                }
+
+                llenar(){
+                    this.splice('arr',0);
+                    for(var i = 0 ; i<this.size; i++){
+                        var numero = Math.round(Math.random()*10);
+                        this.push('arr',numero)
+                    }
+                }
+
+                rotar(){
+                    this.splice('arr2',0);
+                    this.arr2 = this.arr.slice(0);
+                    for(var i = 0; i < this.rot; i++ ){
+                        var ultimo = this.arr2.pop();
+                        this.arr2.unshift(ultimo);
+                    }
+                }
+
+                quitar(e){
+                    var indx = e.model.index;
+                    this.splice('arr2',indx,1)
+                }
+            }
+            customElements.define(ElementoArray.is, ElementoArray);
+        </script>
+    </dom-module>
+</body>
+</html>
